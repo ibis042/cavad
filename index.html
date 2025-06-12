@@ -1,23 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cavad</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sour+Gummy&display=swap" rel="stylesheet" />  
-    <link rel="stylesheet" href="potu.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cavad</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sour+Gummy&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-color: rgb(94, 78, 78);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .meraba {
+      font-family: "Sour Gummy", sans-serif;
+      font-weight: 400;
+      color: white;
+      font-size: 40px;
+      text-align: center;
+      max-width: 80%;
+      margin: 20px auto 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .question-container {
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      color: white;
+      font-family: "Sour Gummy", sans-serif;
+    }
+
+    .answer-buttons {
+      margin-top: 150px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .answer-buttons button {
+      font-size: 24px;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      transition: background-color 0.3s;
+    }
+
+    .answer-buttons button:hover {
+      background-color: #45a049;
+    }
+
+    #gallery {
+      display: none;
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      flex-wrap: wrap;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 15px;
+      border-radius: 12px;
+      z-index: 10;
+      max-width: 90vw;
+      max-height: 300px;
+      overflow-y: auto;
+      justify-content: center;
+    }
+
+    #gallery img {
+      width: 200px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    #gallery img:hover {
+      transform: scale(1.05);
+    }
+
+    .heart, .heartt {
+      position: fixed;
+      font-size: 24px;
+      user-select: none;
+      pointer-events: none;
+      color: red;
+      opacity: 1;
+      animation: float 3s forwards;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-200px) scale(1.5);
+        opacity: 0;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="question-container">
     <div class="meraba">Merhaba bayim😇</div>
-    <div class="answer-buttons">
-    </div>
+    <div class="answer-buttons"></div>
   </div>
 
-
-
-
-  <div class="gallery" id="gallery" style="display:none;">
+  <div id="gallery">
     <img src="galery/IMG_0481.JPG" alt="Cavad yuxuda" />
     <img src="galery/IMG_20240802_214920.jpg" alt="Cavad" />
     <img src="galery/IMG-20241004-WA0012.jpg" alt="Cavad" />
@@ -26,6 +125,137 @@
     <img src="galery/IMG-20240901-WA0011.jpg" alt="Cavad" />
   </div>
 
-  <script src="potu.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const questionText = document.querySelector('.meraba');
+      const answerButtons = document.querySelector('.answer-buttons');
+      const gallery = document.getElementById('gallery');
+
+      function createHeartRight() {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerText = "❤️";
+        heart.style.right = `${Math.random() * 40 + 20}px`;
+        heart.style.top = '100px';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
+      }
+
+      function createHeartLeft() {
+        const heartt = document.createElement("div");
+        heartt.classList.add("heartt");
+        heartt.innerText = "❤️";
+        heartt.style.left = `${Math.random() * 40 + 20}px`;
+        heartt.style.top = '100px';
+        document.body.appendChild(heartt);
+        setTimeout(() => heartt.remove(), 3000);
+      }
+
+      setInterval(createHeartRight, 100);
+      setInterval(createHeartLeft, 100);
+
+      const questions = {
+        start: {
+          text: "Merhaba bayim😇",
+          answers: [
+            { text: "Sizede Merhaba", next: "nasilsiniz" },
+            { text: "Sizede Merhaba", next: "nasilsiniz" }
+          ]
+        },
+        nasilsiniz: {
+          text: "Nasilsiniz bayim",
+          answers: [
+            { text: "Iyiyim🙂", next: "show" },
+            { text: "Kötüyüm🙁", next: "amd_neden" }
+          ]
+        },
+        show: {
+          text: "Mutlu oldum bayim😊 Showa geçelimmi?",
+          answers: [
+            { text: "Tabi😃", next: "final" },
+            { text: "Hadi bakalim😼", next: "final" }
+          ]
+        },
+        amd_neden: {
+          text: "Ama neden?😔",
+          answers: [
+            { text: "Yorgunum😴", next: "final" },
+            { text: "Boş ver😒", next: "final" }
+          ]
+        },
+        final: {
+          text: "Cavad Funny Moments galeriye bax!",
+          answers: [
+            { text: "Galeriye keç", next: null }
+          ]
+        }
+      };
+
+      function showQuestion(key) {
+        if (key === null) {
+          document.querySelector('.question-container').style.display = 'none';
+          gallery.style.display = 'flex';
+          return;
+        }
+
+        document.querySelector('.question-container').style.display = 'block';
+        gallery.style.display = 'none';
+
+        const question = questions[key];
+        if (!question) return;
+
+        questionText.textContent = question.text;
+        answerButtons.innerHTML = "";
+
+        question.answers.forEach(answer => {
+          const btn = document.createElement('button');
+          btn.classList.add('answer-btn');
+          btn.textContent = answer.text;
+          btn.dataset.next = answer.next;
+          answerButtons.appendChild(btn);
+        });
+      }
+
+      showQuestion('start');
+
+      answerButtons.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON') {
+          const next = e.target.dataset.next;
+          showQuestion(next);
+        }
+      });
+
+      gallery.addEventListener('click', (e) => {
+        if (e.target.tagName === 'IMG') {
+          const img = e.target;
+          const fullscreen = document.createElement('div');
+          fullscreen.style.position = 'fixed';
+          fullscreen.style.top = 0;
+          fullscreen.style.left = 0;
+          fullscreen.style.width = '100vw';
+          fullscreen.style.height = '100vh';
+          fullscreen.style.backgroundColor = 'rgba(0,0,0,0.9)';
+          fullscreen.style.display = 'flex';
+          fullscreen.style.justifyContent = 'center';
+          fullscreen.style.alignItems = 'center';
+          fullscreen.style.zIndex = '9999';
+          fullscreen.style.cursor = 'pointer';
+
+          const bigImg = document.createElement('img');
+          bigImg.src = img.src;
+          bigImg.style.maxWidth = '90%';
+          bigImg.style.maxHeight = '90%';
+          bigImg.style.borderRadius = '10px';
+
+          fullscreen.appendChild(bigImg);
+          document.body.appendChild(fullscreen);
+
+          fullscreen.addEventListener('click', () => {
+            fullscreen.remove();
+          });
+        }
+      });
+    });
+  </script>
 </body>
 </html>
